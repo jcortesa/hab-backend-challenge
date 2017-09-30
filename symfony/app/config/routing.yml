@@ -1,3 +1,8 @@
+hab_api:
+    resource: "@HabApiBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
