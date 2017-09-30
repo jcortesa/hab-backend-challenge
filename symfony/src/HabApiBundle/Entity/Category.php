@@ -2,6 +2,7 @@
 
 namespace HabApiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,17 +37,37 @@ class Category
     private $slug;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="children", type="array", nullable=true)
+     * One Category has Many Categories.
+     * @ORM\OneToMany(targetEntity="Category", mappedBy="parent")
      */
     private $children;
 
+    /**
+     * Many Categories have One Category.
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+    private $parent;
+
+    public function __construct()
+    {
+        $this->children = new ArrayCollection();
+    }
+
+    /**
+     * Return string casted id
+     *
+     * @return string Id
+     */
+    public function __toString()
+    {
+        return strval($this->id);
+    }
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -102,27 +123,60 @@ class Category
     }
 
     /**
-     * Set children
+     * Add child
      *
-     * @param array $children
+     * @param \HabApiBundle\Entity\Category $child
      *
      * @return Category
      */
-    public function setChildren($children)
+    public function addChild(\HabApiBundle\Entity\Category $child)
     {
-        $this->children = $children;
+        $this->children[] = $child;
 
         return $this;
     }
 
     /**
+     * Remove child
+     *
+     * @param \HabApiBundle\Entity\Category $child
+     */
+    public function removeChild(\HabApiBundle\Entity\Category $child)
+    {
+        $this->children->removeElement($child);
+    }
+
+    /**
      * Get children
      *
-     * @return array
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
         return $this->children;
     }
-}
 
+    /**
+     * Set parent
+     *
+     * @param \HabApiBundle\Entity\Category $parent
+     *
+     * @return Category
+     */
+    public function setParent(\HabApiBundle\Entity\Category $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \HabApiBundle\Entity\Category
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+}

@@ -35,6 +35,28 @@ class Budget
      */
     private $description;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=255)
+     */
+    private $status;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * @var Category
+     *
+     * @ORM\ManyToOne(targetEntity="Category")
+     * @ORM\JoinColumn(name="id_category", referencedColumnName="id")
+     */
+    private $category;
 
     /**
      * Get id
@@ -93,5 +115,76 @@ class Budget
     {
         return $this->description;
     }
-}
 
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return Budget
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \HabApiBundle\Entity\User $user
+     *
+     * @return Budget
+     */
+    public function setUser(\HabApiBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \HabApiBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set category
+     *
+     * @param \HabApiBundle\Entity\Category $category
+     *
+     * @return Budget
+     */
+    public function setCategory(\HabApiBundle\Entity\Category $category = null)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return \HabApiBundle\Entity\Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+}
