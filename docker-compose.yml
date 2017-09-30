@@ -1,0 +1,53 @@
+version: '2.1'
+services:
+    db:
+        image: mysql:5.7.16
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: symfony
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+        volumes:
+            - db:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+            timeout: 20s
+            retries: 10
+    symfony:
+        build:
+            context: .
+        expose:
+            - "9000"
+        volumes:
+            - ./symfony:/var/www/symfony
+            - ./logs/symfony:/var/www/symfony/app/logs
+            - cache:/var/www/symfony/app/cache
+            - vendor:/var/www/symfony/vendor
+        links:
+            - db
+        depends_on:
+            db:
+                condition: service_healthy
+        working_dir: /var/www/symfony
+        command: 'sh -c "
+            composer install;
+            chmod 777 -R app/cache app/logs;
+            php-fpm7 -F
+            "'
+    nginx:
+        image: nginx:latest
+        ports:
+            - "8000:80"
+        links:
+            - symfony
+        volumes_from:
+            - symfony
+        volumes:
+          - ./docker-files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+          - ./logs/nginx/:/var/log/nginx
+volumes:
+    cache:
+    vendor:
+    db:
