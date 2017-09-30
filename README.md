@@ -24,6 +24,12 @@ $ docker-compose rm -v
 $ docker-compose up --build
 ```
 
+Access to backend via
+
+```
+http://localhost:8000
+```
+
 ## Licensing
 
 The code in this project is licensed under MIT license.

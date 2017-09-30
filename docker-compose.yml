@@ -39,7 +39,7 @@ services:
     nginx:
         image: nginx:latest
         ports:
-            - "80:80"
+            - "8000:80"
         links:
             - symfony
         volumes_from:
