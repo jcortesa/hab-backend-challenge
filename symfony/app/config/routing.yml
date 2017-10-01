@@ -1,8 +1,8 @@
-hab_api:
-    resource: "@HabApiBundle/Controller/"
-    type:     annotation
-    prefix:   /
+habapi_Category:
+    type: rest
+    resource: HabApiBundle\Controller\CategoryController
 
-app:
-    resource: '@AppBundle/Controller/'
-    type: annotation
+habapi_Budget:
+    type: rest
+    resource: HabApiBundle\Controller\BudgetController
+

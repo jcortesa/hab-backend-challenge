@@ -1,4 +1,4 @@
 services:
-#    hab_api.example:
-#        class: HabApiBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    habapi.budget.handler:
+        class: 'HabApiBundle\Handler\BudgetHandler'
+        arguments: ['@doctrine.orm.entity_manager', '@form.factory']
