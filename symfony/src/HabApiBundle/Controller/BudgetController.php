@@ -20,7 +20,6 @@ class BudgetController extends FOSRestController
      * @Annotations\QueryParam(name="limit", requirements="\d+", default="3", description="How many publications to return.")
      *
      * @Annotations\QueryParam(name="email", nullable=true, description="Filter by user email")
-     * @todo paginate results
      */
     public function getBudgetsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
@@ -89,9 +88,9 @@ class BudgetController extends FOSRestController
                 ],
                 Response::HTTP_CREATED
             );
-        } catch (InvalidFormException $e) {
+        } catch (\Exception $e) {
             return new Response(
-                json_encode($e->getForm()),
+                'Something happened',
                 Response::HTTP_BAD_REQUEST
             );
         }
