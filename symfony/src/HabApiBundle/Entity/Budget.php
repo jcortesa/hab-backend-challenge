@@ -59,6 +59,16 @@ class Budget
     private $category;
 
     /**
+     * Return string casted id
+     *
+     * @return string Id
+     */
+    public function __toString()
+    {
+        return strval($this->id);
+    }
+
+    /**
      * Get id
      *
      * @return int

@@ -2,3 +2,6 @@ services:
     habapi.category.handler:
         class: 'HabApiBundle\Handler\CategoryHandler'
         arguments: ['@doctrine.orm.entity_manager']
+    habapi.budget.handler:
+        class: 'HabApiBundle\Handler\BudgetHandler'
+        arguments: ['@doctrine.orm.entity_manager', '@form.factory']

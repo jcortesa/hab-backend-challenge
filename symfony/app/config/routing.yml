@@ -1,3 +1,8 @@
 habapi_Category:
     type: rest
     resource: HabApiBundle\Controller\CategoryController
+
+habapi_Budget:
+    type: rest
+    resource: HabApiBundle\Controller\BudgetController
+
