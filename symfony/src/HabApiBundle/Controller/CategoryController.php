@@ -18,5 +18,4 @@ class CategoryController extends FOSRestController
     {
         return $category;
     }
-
 }

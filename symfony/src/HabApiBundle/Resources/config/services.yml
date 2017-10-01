@@ -1,7 +1,4 @@
 services:
-#    hab_api.example:
-#        class: HabApiBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
     habapi.category.handler:
         class: 'HabApiBundle\Handler\CategoryHandler'
         arguments: ['@doctrine.orm.entity_manager']
