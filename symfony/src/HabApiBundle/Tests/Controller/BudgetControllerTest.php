@@ -16,12 +16,12 @@ class BudgetControllerTest extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'description' => 'una descripción',
+                'description' => '1435 una descripción',
                 'category' => 91,
-                'title' => 'un título',
-                'email' => 'gary@gmail.com',
-                'phone' => '+34666123321',
-                'address' => 'Plaça de Cort, 14, 07001, Palma, Illes Balears',
+                'title' => '1435  un título',
+                'email' => 'gary@1435gmail.com',
+                'phone' => '1435 +34666123321',
+                'address' => '1435 Plaça de Cort, 14, 07001, Palma, Illes Balears',
             ])
         );
 
@@ -30,61 +30,79 @@ class BudgetControllerTest extends WebTestCase
 
     public function testUpdateBudget()
     {
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-
         $client = static::createClient();
+        $client->request('GET', '/budgets/107');
+        $content = json_decode($client->getResponse()->getContent(), true);
+
         $client->request(
             'PATCH',
-            '/budgets/31',
+            '/budgets/107',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'title' => 'un título nuevo',
+                'title' => '107 un título nuevo',
             ])
         );
 
-        $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
+        switch ($content['status']) {
+            case 'pendiente':
+                $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
+                break;
+            default:
+                $this->assertEquals(403, $client->getResponse()->getStatusCode(), 'response status is 403');
+                break;
+        }
     }
 
     public function testPublishBudget()
     {
         $client = static::createClient();
+        $client->request('GET', '/budgets/116');
+        $content = json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PATCH',
-            '/budgets/93/publish',
+            '/budgets/116/publish',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([])
         );
 
-        // brand new budget
-        $this->assertEquals(204, $client->getResponse()->getStatusCode(), 'response status is 204');
+        if (
+            'pendiente' === $content['status'] &&
+            !empty($content['title']) &&
+            !empty($content['description'])
+        ) {
 
-        // budget is already published by previous test
-        $this->assertEquals(403, $client->getResponse()->getStatusCode(), 'response status is 403');
+            $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
+        } else {
+            $this->assertEquals(403, $client->getResponse()->getStatusCode(), 'response status is 403');
+        }
     }
 
     public function testDiscardBudget()
     {
         $client = static::createClient();
+        $client->request('GET', '/budgets/116');
+        $content = json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PATCH',
-            '/budgets/93/discard',
+            '/budgets/116/discard',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([])
         );
 
-        // brand new budget
-        $this->assertEquals(204, $client->getResponse()->getStatusCode(), 'response status is 204');
-
-        // budget is already discarded by previous test
-        $this->assertEquals(403, $client->getResponse()->getStatusCode(), 'response status is 403');
+        switch ($content['status']) {
+            case 'descartada':
+                $this->assertEquals(403, $client->getResponse()->getStatusCode(), 'response status is 403');
+                break;
+            default:
+                $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
+                break;
+        }
     }
 
     public function testListBudget()

@@ -100,6 +100,10 @@ class BudgetController extends FOSRestController
     public function patchBudgetAction(Request $request, Budget $budget)
     {
         try {
+            if ('pendiente' !== $budget->getStatus()) {
+                throw new \Exception();
+            }
+
             $budget = $this->container->get('habapi.budget.handler')
                 ->processForm(
                     $budget,
@@ -113,12 +117,12 @@ class BudgetController extends FOSRestController
                     'budget' => $budget,
                     '_format' => $request->get('_format')
                 ],
-                Response::HTTP_CREATED
+                Response::HTTP_NO_CONTENT
             );
-        } catch (InvalidFormException $e) {
+        } catch (\Exception $e) {
             return new Response(
-                json_encode($e->getForm()),
-                Response::HTTP_BAD_REQUEST
+                'Sólo pueden ser modificadas solicitudes en estado "pendiente"',
+                Response::HTTP_FORBIDDEN
             );
         }
     }

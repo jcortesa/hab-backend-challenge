@@ -37,26 +37,28 @@ class BudgetHandler
         if ($form->isValid()) {
             $budget = $form->getData();
             $budget->setStatus('pendiente');
-            $email = $form->get('email')->getData();
 
-            // check if user exist. if not, create it
-            $user = $this->om->getRepository('HabApiBundle:User')
-                ->findOneBy(['email' => $email])
-            ;
+            if ('POST' === $method) {
+                // check if user exist and update it. if not, create it
+                $email = $form->get('email')->getData();
+                $user = $this->om->getRepository('HabApiBundle:User')
+                    ->findOneBy(['email' => $email])
+                ;
 
-            if (empty($user)) {
-                $user = new User();
-                $user->setEmail($email);
+                if (empty($user)) {
+                    $user = new User();
+                    $user->setEmail($email);
+                }
+
+                $user
+                    ->setPhone($form->get('phone')->getData())
+                    ->setAddress($form->get('address')->getData())
+                ;
+
+                $this->om->persist($user);
+                $budget->setUser($user);
             }
 
-            $user
-                ->setPhone($form->get('phone')->getData())
-                ->setAddress($form->get('address')->getData())
-            ;
-
-            $this->om->persist($user);
-
-            $budget->setUser($user);
             $this->om->persist($budget);
             $this->om->flush();
             return $budget;
