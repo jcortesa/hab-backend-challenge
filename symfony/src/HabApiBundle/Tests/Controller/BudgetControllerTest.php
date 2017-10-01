@@ -24,6 +24,7 @@ class BudgetControllerTest extends WebTestCase
                 'address' => 'Plaça de Cort, 14, 07001, Palma, Illes Balears',
             ])
         );
+
         $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
     }
 
@@ -41,10 +42,7 @@ class BudgetControllerTest extends WebTestCase
             ])
         );
 
-        $this->assertEquals(
-            201,
-            $client->getResponse()->getStatusCode()
-        );
+        $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
     }
 
     public function testPublishBudget()
@@ -59,10 +57,7 @@ class BudgetControllerTest extends WebTestCase
             json_encode([])
         );
 
-        $this->assertEquals(
-            201,
-            $client->getResponse()->getStatusCode()
-        );
+        $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
     }
 
     public function testListBudget()
