@@ -14,11 +14,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetController extends FOSRestController
 {
     /**
+     * @Annotations\QueryParam(name="offset", requirements="\d+", nullable=true, description="Offset from which to start listing publications.")
+     * @Annotations\QueryParam(name="limit", requirements="\d+", default="3", description="How many publications to return.")
+     *
      * @Annotations\QueryParam(name="email", nullable=true, description="Filter by user email")
      * @todo paginate results
      */
     public function getBudgetsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
+        $offset = $paramFetcher->get('offset');
+        $offset = null == $offset ? 0 : $offset;
+        $limit = $paramFetcher->get('limit');
+
         $email = $paramFetcher->get('email');
         $user = $this->container->get('doctrine')->getManager()
             ->getRepository('HabApiBundle:User')->findOneBy(['email' => $email]);
@@ -27,8 +34,14 @@ class BudgetController extends FOSRestController
             throw new NotFoundHttpException(sprintf('No budget was found by that user email'));
         }
 
-        $criteria = ['user' => $user];
-        return $this->container->get('habapi.budget.handler')->all($criteria);
+        $budgets = $this->container->get('doctrine')->getManager()
+            ->getRepository('HabApiBundle:Budget')->findByPaginated(
+                $user,
+                $limit,
+                $offset
+            );
+
+        return $budgets;
     }
 
     public function getBudgetAction(Budget $budget)

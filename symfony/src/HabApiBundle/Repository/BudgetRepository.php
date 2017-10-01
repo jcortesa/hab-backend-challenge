@@ -2,6 +2,8 @@
 
 namespace HabApiBundle\Repository;
 
+use HabApiBundle\Entity\User;
+
 /**
  * BudgetRepository
  *
@@ -10,4 +12,28 @@ namespace HabApiBundle\Repository;
  */
 class BudgetRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByPaginated($user, $limit, $offset)
+    {
+        $em = $this->getEntityManager();
+        $repository = $em->getRepository('HabApiBundle:Budget');
+        $qb = $repository->createQueryBuilder('b');
+        $qb->select('b');
+
+        if ($user instanceof User) {
+            $qb
+                ->where('b.user = :user')
+                ->setParameter('user', $user)
+            ;
+        }
+
+        $qb->setFirstResult($offset);
+        if (0 < $limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }
