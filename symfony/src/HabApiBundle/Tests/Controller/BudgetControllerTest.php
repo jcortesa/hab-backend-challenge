@@ -28,4 +28,11 @@ class BudgetControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
     }
 
+    public function testListBudget()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/budgets');
+        $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
+    }
+
 }

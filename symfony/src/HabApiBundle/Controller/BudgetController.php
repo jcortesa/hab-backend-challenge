@@ -10,6 +10,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BudgetController extends FOSRestController
 {
+    public function getBudgetsAction()
+    {
+        /**
+         * @todo filter by user email
+         * @todo paginate results
+         */
+        return $this->container->get('habapi.budget.handler')->all();
+    }
 
     /* @Annotations\View(
      *  templateVar="budget",
