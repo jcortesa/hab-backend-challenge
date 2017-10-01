@@ -1,7 +1,3 @@
 habapi_Category:
     type: rest
     resource: HabApiBundle\Controller\CategoryController
-
-app:
-    resource: '@AppBundle/Controller/'
-    type: annotation

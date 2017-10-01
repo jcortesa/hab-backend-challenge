@@ -4,7 +4,6 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle",
             "HabApiBundle\\": "src/HabApiBundle"
         },
         "classmap": [
