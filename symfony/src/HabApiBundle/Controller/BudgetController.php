@@ -129,6 +129,14 @@ class BudgetController extends FOSRestController
     public function publishBudgetAction(Request $request, Budget $budget)
     {
         try {
+            if (
+                'pendiente' !== $budget->getStatus() ||
+                empty($budget->getTitle()) ||
+                empty($budget->getDescription())
+            ) {
+                throw new \Exception();
+            }
+
             $budget = $this->container->get('habapi.budget.handler')->publish($budget);
             return $this->routeRedirectView(
                 'get_budget',
@@ -138,10 +146,10 @@ class BudgetController extends FOSRestController
                 ],
                 Response::HTTP_NO_CONTENT
             );
-        } catch (InvalidFormException $e) {
+        } catch (\Exception $e) {
             return new Response(
-                json_encode($e->getForm()),
-                Response::HTTP_BAD_REQUEST
+                'La solicitud de presupuesto ya está publicada o no cumple con los requisitos para ser publicada',
+                Response::HTTP_FORBIDDEN
             );
         }
     }
@@ -152,6 +160,10 @@ class BudgetController extends FOSRestController
     public function discardBudgetAction(Request $request, Budget $budget)
     {
         try {
+            if ('descartada' === $budget->getStatus()) {
+                throw new \Exception();
+            }
+
             $budget = $this->container->get('habapi.budget.handler')->discard($budget);
             return $this->routeRedirectView(
                 'get_budget',
@@ -161,10 +173,10 @@ class BudgetController extends FOSRestController
                 ],
                 Response::HTTP_NO_CONTENT
             );
-        } catch (InvalidFormException $e) {
+        } catch (\Exception $e) {
             return new Response(
-                json_encode($e->getForm()),
-                Response::HTTP_BAD_REQUEST
+                'La solicitud de presupuesto ya está descartada',
+                Response::HTTP_FORBIDDEN
             );
         }
     }

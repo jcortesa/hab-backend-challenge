@@ -51,21 +51,40 @@ class BudgetControllerTest extends WebTestCase
 
     public function testPublishBudget()
     {
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-
         $client = static::createClient();
         $client->request(
             'PATCH',
-            '/budgets/31/publish',
+            '/budgets/93/publish',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([])
         );
 
-        $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
+        // brand new budget
+        $this->assertEquals(204, $client->getResponse()->getStatusCode(), 'response status is 204');
+
+        // budget is already published by previous test
+        $this->assertEquals(403, $client->getResponse()->getStatusCode(), 'response status is 403');
+    }
+
+    public function testDiscardBudget()
+    {
+        $client = static::createClient();
+        $client->request(
+            'PATCH',
+            '/budgets/93/discard',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([])
+        );
+
+        // brand new budget
+        $this->assertEquals(204, $client->getResponse()->getStatusCode(), 'response status is 204');
+
+        // budget is already discarded by previous test
+        $this->assertEquals(403, $client->getResponse()->getStatusCode(), 'response status is 403');
     }
 
     public function testListBudget()
