@@ -3,6 +3,7 @@
 namespace HabApiBundle\Handler;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use HabApiBundle\Entity\Budget;
 use HabApiBundle\Entity\User;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -62,5 +63,21 @@ class BudgetHandler
         }
 
         throw new InvalidFormException('Invalid submitted data', $form);
+    }
+
+    public function publish(Budget $budget)
+    {
+        $budget->setStatus('publicada');
+        $this->om->persist($budget);
+        $this->om->flush();
+        return $budget;
+    }
+
+    public function discard(Budget $budget)
+    {
+        $budget->setStatus('descartada');
+        $this->om->persist($budget);
+        $this->om->flush();
+        return $budget;
     }
 }

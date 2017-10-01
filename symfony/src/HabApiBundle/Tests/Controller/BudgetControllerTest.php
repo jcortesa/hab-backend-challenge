@@ -47,6 +47,24 @@ class BudgetControllerTest extends WebTestCase
         );
     }
 
+    public function testPublishBudget()
+    {
+        $client = static::createClient();
+        $client->request(
+            'PATCH',
+            '/budgets/31/publish',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([])
+        );
+
+        $this->assertEquals(
+            201,
+            $client->getResponse()->getStatusCode()
+        );
+    }
+
     public function testListBudget()
     {
         $client = static::createClient();
