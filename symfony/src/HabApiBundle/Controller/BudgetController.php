@@ -20,11 +20,6 @@ class BudgetController extends FOSRestController
         return $this->container->get('habapi.budget.handler')->all();
     }
 
-    /* @Annotations\View(
-     *  templateVar="budget",
-     *  serializerEnableMaxDepthChecks=true
-     * )
-     */
     public function getBudgetAction(Budget $budget)
     {
         return $budget;
