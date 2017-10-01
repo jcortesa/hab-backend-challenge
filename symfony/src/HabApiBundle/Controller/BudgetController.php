@@ -6,6 +6,8 @@ use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use HabApiBundle\Entity\Budget;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\OffsetRepresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,10 +24,6 @@ class BudgetController extends FOSRestController
      */
     public function getBudgetsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
-        $offset = $paramFetcher->get('offset');
-        $offset = null == $offset ? 0 : $offset;
-        $limit = $paramFetcher->get('limit');
-
         $email = $paramFetcher->get('email');
         $user = $this->container->get('doctrine')->getManager()
             ->getRepository('HabApiBundle:User')->findOneBy(['email' => $email]);
@@ -34,14 +32,37 @@ class BudgetController extends FOSRestController
             throw new NotFoundHttpException(sprintf('No budget was found by that user email'));
         }
 
-        $budgets = $this->container->get('doctrine')->getManager()
+        $allBudgets = $this->container->get('doctrine')->getManager()
+            ->getRepository('HabApiBundle:Budget')->findByPaginated($user);
+        if (empty($allBudgets)) {
+            throw new NotFoundHttpException(sprintf('No resource was found.'));
+        }
+
+        $offset = $paramFetcher->get('offset');
+        $offset = null == $offset ? 0 : $offset;
+        $limit = $paramFetcher->get('limit');
+        $paginatedBudgets = $this->container->get('doctrine')->getManager()
             ->getRepository('HabApiBundle:Budget')->findByPaginated(
                 $user,
                 $limit,
                 $offset
-            );
+            )
+        ;
+        if (empty($paginatedBudgets)) {
+            throw new NotFoundHttpException(sprintf('No resource was found in that page.'));
+        }
 
-        return $budgets;
+        return new OffsetRepresentation(
+            new CollectionRepresentation($paginatedBudgets, 'budgets', 'budgets'),
+            'get_budgets',
+            $paramFetcher->all(),
+            $offset,
+            $limit,
+            count($allBudgets),
+            'offset',
+            'limit',
+            false
+        );
     }
 
     public function getBudgetAction(Budget $budget)

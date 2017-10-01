@@ -12,7 +12,7 @@ use HabApiBundle\Entity\User;
  */
 class BudgetRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findByPaginated($user, $limit, $offset)
+    public function findByPaginated($user, $limit = null, $offset = null)
     {
         $em = $this->getEntityManager();
         $repository = $em->getRepository('HabApiBundle:Budget');
