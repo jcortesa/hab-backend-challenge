@@ -20,9 +20,9 @@ class BudgetHandler
         $this->repository = $this->om->getRepository('HabApiBundle:Budget');
     }
 
-    public function all()
+    public function all(array $criteria)
     {
-        return $this->repository->findAll();
+        return $this->repository->findBy($criteria);
     }
 
     public function processForm($budget, array $parameters, $method = "PATCH")

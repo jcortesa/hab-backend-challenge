@@ -72,4 +72,14 @@ class BudgetControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
     }
 
+    public function testFilterListBudget()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/budgets', ['email' => 'asdf@asd.com']);
+        $this->assertCount(
+            3,
+            json_decode($client->getResponse()->getContent(), true)
+        );
+    }
+
 }

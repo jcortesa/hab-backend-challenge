@@ -4,6 +4,7 @@ namespace HabApiBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use HabApiBundle\Entity\Budget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,13 +12,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BudgetController extends FOSRestController
 {
-    public function getBudgetsAction()
+    /**
+     * @Annotations\QueryParam(name="email", nullable=true, description="Filter by user email")
+     * @todo paginate results
+     */
+    public function getBudgetsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
-        /**
-         * @todo filter by user email
-         * @todo paginate results
-         */
-        return $this->container->get('habapi.budget.handler')->all();
+        $email = $paramFetcher->get('email');
+        $user = $this->container->get('doctrine')->getManager()
+            ->getRepository('HabApiBundle:User')->findOneBy(['email' => $email]);
+        $criteria = ['user' => $user];
+        return $this->container->get('habapi.budget.handler')->all($criteria);
     }
 
     public function getBudgetAction(Budget $budget)
