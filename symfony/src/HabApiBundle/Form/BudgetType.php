@@ -14,16 +14,11 @@ class BudgetType extends AbstractType
     {
         $builder
             ->add(
-                'user',
-                EntityType::class,
-                ['class' => 'HabApiBundle:User']
-            )
-            ->add(
                 'category',
                 EntityType::class,
                 ['class' => 'HabApiBundle:Category']
             )
-            ->add('title')
+            ->add('title', TextType::class, ['data' => null])
             ->add('description')
             ->add('email', TextType::class, ['mapped' => false])
             ->add('phone', TextType::class, ['mapped' => false])
