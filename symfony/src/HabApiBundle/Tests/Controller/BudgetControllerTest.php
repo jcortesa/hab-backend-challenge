@@ -9,7 +9,6 @@ class BudgetControllerTest extends WebTestCase
     public function testCreateBudget()
     {
         $client = static::createClient();
-        $client->request('POST', '/budgets');
         $client->request(
             'POST',
             '/budgets',
