@@ -9,6 +9,7 @@ use HabApiBundle\Entity\Budget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BudgetController extends FOSRestController
 {
@@ -21,6 +22,11 @@ class BudgetController extends FOSRestController
         $email = $paramFetcher->get('email');
         $user = $this->container->get('doctrine')->getManager()
             ->getRepository('HabApiBundle:User')->findOneBy(['email' => $email]);
+
+        if (!empty($email) && empty($user)) {
+            throw new NotFoundHttpException(sprintf('No budget was found by that user email'));
+        }
+
         $criteria = ['user' => $user];
         return $this->container->get('habapi.budget.handler')->all($criteria);
     }

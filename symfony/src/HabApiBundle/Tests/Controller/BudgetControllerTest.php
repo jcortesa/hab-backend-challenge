@@ -77,4 +77,11 @@ class BudgetControllerTest extends WebTestCase
         );
     }
 
+    public function testFilterBudgetByInexistentUser()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/budgets', ['email' => 'no@exists.com']);
+        $this->assertTrue($client->getResponse()->isNotFound(), 'response status is 404');
+    }
+
 }
