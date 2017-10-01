@@ -56,4 +56,29 @@ class BudgetController extends FOSRestController
         }
     }
 
+    public function patchBudgetAction(Request $request, Budget $budget)
+    {
+        try {
+            $budget = $this->container->get('habapi.budget.handler')
+                ->processForm(
+                    $budget,
+                    $request->request->all(),
+                    'PATCH'
+                )
+            ;
+            return $this->routeRedirectView(
+                'get_budget',
+                [
+                    'budget' => $budget,
+                    '_format' => $request->get('_format')
+                ],
+                Response::HTTP_CREATED
+            );
+        } catch (InvalidFormException $e) {
+            return new Response(
+                json_encode($e->getForm()),
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
 }
