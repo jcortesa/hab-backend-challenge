@@ -6,3 +6,6 @@ habapi_Budget:
     type: rest
     resource: HabApiBundle\Controller\BudgetController
 
+habapi_Validate:
+    type: rest
+    resource: HabApiBundle\Controller\ValidateController
