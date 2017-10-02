@@ -17,6 +17,13 @@ Then, build and get the project running:
 $ docker-compose up --build
 ```
 
+Populate database with categories data
+
+```bash
+$ docker exec -ti [docker-instance-id] sh
+# php bin/console hab-api:create-categories
+```
+
 If something strange happens, delete the docker-compose installation of the project:
 
 ```bash
