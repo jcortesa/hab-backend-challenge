@@ -2,6 +2,7 @@ hab-backend-challenge
 =====================
 
 Habitissimo Backend Challenge, by @jcortesa
+Mainly, all the challenge code is in the HabApiBundle
 
 # Installing / Getting started
 
